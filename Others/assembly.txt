@@ -1,0 +1,207 @@
+汇编语言
+
+
+汇编语言的基本指令因平台和指令集不同而有所差异，比如常见的有 **x86**, **x86-64**, **ARM** 等。但这里我先以最常见的 **x86 架构（32位）** 为例，介绍一些最基本的通用汇编指令。
+
+---
+
+## 🧠 一、数据传送指令（Data Transfer）
+
+| 指令 | 含义 |
+|------|------|
+| `MOV dest, src` | 将数据从 src 传送到 dest |
+| `PUSH src` | 将数据压入栈 |
+| `POP dest` | 从栈中弹出数据存入 dest |
+| `XCHG dest, src` | 交换 dest 和 src 的值 |
+| `LEA dest, src` | 加载有效地址（Load Effective Address）|
+
+---
+
+## ➕ 二、算术运算指令（Arithmetic）
+
+| 指令 | 含义 |
+|------|------|
+| `ADD dest, src` | dest = dest + src |
+| `SUB dest, src` | dest = dest - src |
+| `INC dest` | dest = dest + 1 |
+| `DEC dest` | dest = dest - 1 |
+| `MUL src` | 无符号乘法（默认与 AX 相乘）|
+| `IMUL src` | 有符号乘法 |
+| `DIV src` | 无符号除法 |
+| `IDIV src` | 有符号除法 |
+
+---
+
+## 🔁 三、逻辑与位操作指令（Logic / Bitwise）
+
+| 指令 | 含义 |
+|------|------|
+| `AND dest, src` | 与运算 |
+| `OR dest, src` | 或运算 |
+| `XOR dest, src` | 异或 |
+| `NOT dest` | 位取反 |
+| `SHL dest, n` | 左移（乘以2ⁿ） |
+| `SHR dest, n` | 逻辑右移 |
+| `SAR dest, n` | 算术右移（保留符号） |
+
+---
+
+## 🔍 四、比较和测试指令
+
+| 指令 | 含义 |
+|------|------|
+| `CMP a, b` | 比较 a 和 b，相当于 `a - b`，结果不保存，但影响标志位 |
+| `TEST a, b` | 位与操作，仅设置标志位，不保存结果 |
+
+---
+
+## 🔀 五、跳转指令（控制流程）
+
+| 指令 | 含义 |
+|------|------|
+| `JMP label` | 无条件跳转 |
+| `JE / JZ label` | 等于 / 零 跳转 |
+| `JNE / JNZ label` | 不等 / 非零 跳转 |
+| `JG / JNLE label` | 大于跳转 |
+| `JL / JNGE label` | 小于跳转 |
+| `CALL label` | 调用函数（跳转并压栈返回地址）|
+| `RET` | 从函数返回 |
+
+---
+
+## 🧩 六、字符串处理（高级用法，了解）
+
+| 指令 | 含义 |
+|------|------|
+| `MOVSB / MOVSW / MOVSD` | 按字节/字/双字复制字符串 |
+| `LODSB / LODSW / LODSD` | 加载字符串元素到寄存器 |
+| `STOSB / STOSW / STOSD` | 存储寄存器数据到字符串 |
+
+---
+
+## 🛠 七、系统调用和中断（比如 DOS 或 Linux 下）
+
+| 指令 | 含义 |
+|------|------|
+| `INT n` | 触发中断（如 `INT 0x80`）|
+| `SYSCALL` | Linux/x86_64 下的系统调用 |
+| `HLT` | 停机 |
+| `NOP` | 空操作 |
+
+---
+
+想更进一步的话，我可以：
+- 帮你用代码示例展示这些指令；
+- 讲讲汇编里的寄存器（比如 `AX`, `BX`, `EAX` 等）；
+- 帮你写一个“Hello, world” 的汇编程序。
+
+你目前是学 x86 还是 ARM 汇编？目标是做系统底层、逆向分析，还是图个兴趣？
+
+
+
+太好了，**跳转指令**是汇编语言里控制程序执行流程的核心部分，像 if-else、循环、函数调用等高级语言的控制结构，都是由跳转指令来实现的。
+
+我们还是以 **x86汇编** 为例，讲解几类常用的跳转指令，配合例子来说明。
+
+---
+
+## 🟢 一、无条件跳转 `JMP`
+
+```asm
+JMP label
+```
+
+### 🧪 示例：
+```asm
+mov ax, 1
+jmp skip
+mov ax, 2   ; 这句不会执行
+skip:
+mov bx, 3
+```
+
+---
+
+## 🟡 二、条件跳转（依赖标志位）
+
+在执行 `CMP` 或 `TEST` 等比较指令后，CPU 会根据结果设置标志位（如ZF, SF, OF, CF等），接着执行跳转指令判断是否跳转。
+
+### 常见条件跳转指令：
+
+| 指令 | 含义 | 说明 |
+|------|------|------|
+| `JE` / `JZ` | 等于 / 零 | ZF = 1 |
+| `JNE` / `JNZ` | 不等 / 非零 | ZF = 0 |
+| `JG` / `JNLE` | 大于（signed）| ZF = 0 且 SF = OF |
+| `JGE` / `JNL` | 大于等于（signed）| SF = OF |
+| `JL` / `JNGE` | 小于（signed）| SF ≠ OF |
+| `JLE` / `JNG` | 小于等于（signed）| ZF = 1 或 SF ≠ OF |
+| `JA` | 大于（unsigned）| CF = 0 且 ZF = 0 |
+| `JAE` | 大于等于（unsigned）| CF = 0 |
+| `JB` | 小于（unsigned）| CF = 1 |
+| `JBE` | 小于等于（unsigned）| CF = 1 或 ZF = 1 |
+
+---
+
+## 🔁 三、循环跳转：`LOOP`
+
+```asm
+LOOP label
+```
+
+- 默认使用 `CX`（或 `ECX`、`RCX`）寄存器做循环计数。
+- 每执行一次，`CX = CX - 1`，当 `CX != 0` 时跳转。
+
+### 示例（重复3次）：
+```asm
+mov cx, 3
+loop_start:
+    ; 执行某些操作
+    ; ...
+    loop loop_start
+```
+
+---
+
+## 🧪 条件跳转完整示例：
+
+```asm
+mov ax, 5
+mov bx, 3
+cmp ax, bx    ; 比较 ax 与 bx -> ax > bx
+jg greater    ; 如果 ax > bx，跳转到 greater
+mov cx, 0     ; 否则执行这句
+jmp done
+
+greater:
+mov cx, 1     ; ax > bx 的处理逻辑
+
+done:
+; 后续代码
+```
+
+---
+
+## 📞 四、函数调用跳转 `CALL` 和返回 `RET`
+
+```asm
+CALL function
+...
+RET
+```
+
+```asm
+main:
+    call say_hello
+    jmp exit
+
+say_hello:
+    ; 打印 hello
+    ret
+
+exit:
+```
+
+---
+
+如果你想我用 `NASM + Linux` 或 `MASM + Windows` 写一个实际的带跳转的程序（比如 if/else 或循环），也可以搞一个出来给你练练。你有偏好的平台或者目标用途吗？比如逆向、游戏外挂、底层优化？

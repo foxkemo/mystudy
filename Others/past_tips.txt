@@ -1,0 +1,45 @@
+TIPS
+
+
+
+1.Shell Tips
+
+* Ctrl K ：删除光标之后所有字符
+* Ctrl U : 清空当前键入的命令
+* Ctrl W : 删除光标前的单词(Word, 不包含空格的字符串)
+* Ctrl Z : 把当前进程放到后台（之后可用''fg''命令回到前台）
+* Ctrl A ： 移动光标到命令行首
+* Ctrl E : 移动光标到命令行尾
+* Alt D: 删除当前单词
+* Ctrl Y : 粘贴Ctrl W或Ctrl K删除的内容
+* Alt . : 粘贴上一条命令的最后一个参数（很有用）
+* Alt [0-9] Alt . 粘贴上一条命令的第[0-9]个参数
+* Alt [0-9] Alt . Alt. 粘贴上上一条命令的第[0-9]个参数
+* Ctrl X Ctrl E : 调出系统默认编辑器编辑当前输入的命令，退出编辑器时，命令执行
+* **Ctrl \ ** : 删除光标前的所有空白字符
+* Ctrl R，再按历史命令中出现过的字符串：按字符串寻找历史命令（重度推荐）
+
+2.包管理
+
+
+清理
+brew cleanup
+sudo port clean --all installed
+
+卸载
+sudo port uninstall --follow-dependencies 
+
+列出所有安装的包
+port installed
+brew ls 或者 brew list
+
+安装了java
+
+
+
+*.Other
+
+
+可以把hexo md文件的 根文件夹/ 看为 source文件夹 
+所以 blog/sources/images   在md中就是 /images
+
