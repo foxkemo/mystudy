@@ -1,4 +1,4 @@
 git pull
 git add -A
-git commit -m meow
+git commit -m auto-commit
 git push
